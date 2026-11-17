@@ -1,0 +1,117 @@
+{
+ "updated": "2026-11-17",
+ "checked": "2026-11-17",
+ "since": "2006-01-01",
+ "fxSource": "Yahoo Finance KRW=X 종가",
+ "tickers": [
+  {
+   "symbol": "JEPQ",
+   "name": "JPMorgan Nasdaq Equity Premium Income ETF",
+   "type": "ETF",
+   "asOf": "2026-11-16"
+  },
+  {
+   "symbol": "JEPI",
+   "name": "JPMorgan Equity Premium Income ETF",
+   "type": "ETF",
+   "asOf": "2026-11-16"
+  },
+  {
+   "symbol": "SCHD",
+   "name": "Schwab U.S. Dividend Equity ETF",
+   "type": "ETF",
+   "asOf": "2026-11-16"
+  },
+  {
+   "symbol": "QQQ",
+   "name": "Invesco QQQ Trust",
+   "type": "ETF",
+   "asOf": "2026-11-16"
+  },
+  {
+   "symbol": "SPY",
+   "name": "State Street SPDR S&P 500 ETF Trust",
+   "type": "ETF",
+   "asOf": "2026-11-16"
+  },
+  {
+   "symbol": "O",
+   "name": "Realty Income Corporation",
+   "type": "EQUITY",
+   "asOf": "2026-11-16"
+  },
+  {
+   "symbol": "KO",
+   "name": "The Coca-Cola Company",
+   "type": "EQUITY",
+   "asOf": "2026-11-16"
+  }
+ ],
+ "extra": [],
+ "benchmarks": [
+  "SPY",
+  "QQQ",
+  "SCHD"
+ ],
+ "log": {
+  "JEPQ": {
+   "ok": true,
+   "rows": 1139,
+   "dividends": 54,
+   "asOf": "2026-11-16",
+   "notes": []
+  },
+  "JEPI": {
+   "ok": true,
+   "rows": 1631,
+   "dividends": 77,
+   "asOf": "2026-11-16",
+   "notes": [
+    "Nasdaq 지급일 없음(stocks: 행 없음(HTTP 200)) → 배당락일 기준으로 표시"
+   ]
+  },
+  "SCHD": {
+   "ok": true,
+   "rows": 3790,
+   "dividends": 60,
+   "asOf": "2026-11-16",
+   "notes": [
+    "Nasdaq 지급일 없음(stocks: 행 없음(HTTP 200)) → 배당락일 기준으로 표시"
+   ]
+  },
+  "QQQ": {
+   "ok": true,
+   "rows": 5251,
+   "dividends": 86,
+   "asOf": "2026-11-16",
+   "notes": []
+  },
+  "SPY": {
+   "ok": true,
+   "rows": 5251,
+   "dividends": 83,
+   "asOf": "2026-11-16",
+   "notes": [
+    "Nasdaq 지급일 없음(stocks: 행 없음(HTTP 200)) → 배당락일 기준으로 표시"
+   ]
+  },
+  "O": {
+   "ok": true,
+   "rows": 5251,
+   "dividends": 250,
+   "asOf": "2026-11-16",
+   "notes": [
+    "Nasdaq 지급일 없음(etf: 행 없음(HTTP 200)) → 배당락일 기준으로 표시"
+   ]
+  },
+  "KO": {
+   "ok": true,
+   "rows": 5251,
+   "dividends": 83,
+   "asOf": "2026-11-16",
+   "notes": [
+    "Nasdaq 지급일 없음(etf: 행 없음(HTTP 200)) → 배당락일 기준으로 표시"
+   ]
+  }
+ }
+}
