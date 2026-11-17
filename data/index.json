@@ -59,7 +59,9 @@
    "rows": 1139,
    "dividends": 54,
    "asOf": "2026-11-16",
-   "notes": []
+   "notes": [
+    "일정 후보: Nasdaq={'ex': '2026-11-02', 'pay': '2026-11-04', 'source': 'Nasdaq.com'}, Yahoo=None"
+   ]
   },
   "JEPI": {
    "ok": true,
@@ -67,7 +69,8 @@
    "dividends": 77,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정",
+    "일정 후보: Nasdaq=None, Yahoo=None"
    ]
   },
   "SCHD": {
@@ -76,7 +79,8 @@
    "dividends": 60,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정",
+    "일정 후보: Nasdaq=None, Yahoo=None"
    ]
   },
   "QQQ": {
@@ -84,7 +88,9 @@
    "rows": 5251,
    "dividends": 86,
    "asOf": "2026-11-16",
-   "notes": []
+   "notes": [
+    "일정 후보: Nasdaq={'ex': '2026-09-21', 'pay': '2026-10-08', 'source': 'Nasdaq.com'}, Yahoo=None"
+   ]
   },
   "SPY": {
    "ok": true,
@@ -92,7 +98,8 @@
    "dividends": 83,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정",
+    "일정 후보: Nasdaq=None, Yahoo=None"
    ]
   },
   "O": {
@@ -101,7 +108,8 @@
    "dividends": 250,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정",
+    "일정 후보: Nasdaq=None, Yahoo={'ex': '2026-11-30', 'pay': '2026-12-15', 'source': 'Yahoo Finance'}"
    ]
   },
   "KO": {
@@ -110,7 +118,8 @@
    "dividends": 83,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정",
+    "일정 후보: Nasdaq=None, Yahoo={'ex': '2026-12-01', 'pay': '2026-12-15', 'source': 'Yahoo Finance'}"
    ]
   }
  }
