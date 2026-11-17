@@ -67,7 +67,7 @@
    "dividends": 77,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq 지급일 없음(etf: 행 없음(HTTP 200, status={\"rCode\": 200, \"bCodeMessage\": null, \"developerMessage\": null}, data키=['dividendHeaderValues', 'exDividendDate', 'dividendPaymentDate', 'yield', 'annualizedDividend', 'payoutRatio']) | stocks: 행 없음(HTTP 200, status={\"rCode\": 400, \"bCodeMessage\": [{\"code\": 1001, \"errorMessage\": \"Symbol not exists.\"}], \"developerMessage\": null}, data키=[])) → 배당락일 기준으로 표시"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
    ]
   },
   "SCHD": {
@@ -76,7 +76,7 @@
    "dividends": 60,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq 지급일 없음(etf: 행 없음(HTTP 200, status={\"rCode\": 200, \"bCodeMessage\": null, \"developerMessage\": null}, data키=['dividendHeaderValues', 'exDividendDate', 'dividendPaymentDate', 'yield', 'annualizedDividend', 'payoutRatio']) | stocks: 행 없음(HTTP 200, status={\"rCode\": 400, \"bCodeMessage\": [{\"code\": 1001, \"errorMessage\": \"Symbol not exists.\"}], \"developerMessage\": null}, data키=[])) → 배당락일 기준으로 표시"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
    ]
   },
   "QQQ": {
@@ -92,7 +92,7 @@
    "dividends": 83,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq 지급일 없음(etf: 행 없음(HTTP 200, status={\"rCode\": 200, \"bCodeMessage\": null, \"developerMessage\": null}, data키=['dividendHeaderValues', 'exDividendDate', 'dividendPaymentDate', 'yield', 'annualizedDividend', 'payoutRatio']) | stocks: 행 없음(HTTP 200, status={\"rCode\": 400, \"bCodeMessage\": [{\"code\": 1001, \"errorMessage\": \"Symbol not exists.\"}], \"developerMessage\": null}, data키=[])) → 배당락일 기준으로 표시"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
    ]
   },
   "O": {
@@ -101,7 +101,7 @@
    "dividends": 250,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq 지급일 없음(stocks: 행 없음(HTTP 200, status={\"rCode\": 200, \"bCodeMessage\": null, \"developerMessage\": null}, data키=['dividendHeaderValues', 'exDividendDate', 'dividendPaymentDate', 'yield', 'annualizedDividend', 'payoutRatio']) | etf: 행 없음(HTTP 200, status={\"rCode\": 400, \"bCodeMessage\": [{\"code\": 1001, \"errorMessage\": \"Symbol not exists.\"}], \"developerMessage\": null}, data키=[])) → 배당락일 기준으로 표시"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
    ]
   },
   "KO": {
@@ -110,7 +110,7 @@
    "dividends": 83,
    "asOf": "2026-11-16",
    "notes": [
-    "Nasdaq 지급일 없음(stocks: 행 없음(HTTP 200, status={\"rCode\": 200, \"bCodeMessage\": null, \"developerMessage\": null}, data키=['dividendHeaderValues', 'exDividendDate', 'dividendPaymentDate', 'yield', 'annualizedDividend', 'payoutRatio']) | etf: 행 없음(HTTP 200, status={\"rCode\": 400, \"bCodeMessage\": [{\"code\": 1001, \"errorMessage\": \"Symbol not exists.\"}], \"developerMessage\": null}, data키=[])) → 배당락일 기준으로 표시"
+    "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정"
    ]
   }
  }
