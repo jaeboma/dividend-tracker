@@ -232,7 +232,6 @@ def collect(sym, since, fx, today):
     except Exception as e:  # noqa: BLE001
         ycal, _ = {}, notes.append(f"Yahoo 일정 실패: {e}")
     nxt, lag = pick_schedule([nsum, ycal], divs)
-    notes.append(f"일정 후보: Nasdaq={nsum or None}, Yahoo={ycal or None}")
     holdings = None
     if is_etf:
         try:
