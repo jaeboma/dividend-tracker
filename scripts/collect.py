@@ -134,8 +134,7 @@ def fetch_nasdaq_dividends(sym, kinds):
                     out.append(dict(ex=ex, record=mdy(x.get("recordDate") or ""), pay=mdy(x.get("paymentDate") or ""), amount=amt))
             if out:
                 return sorted(out, key=lambda r: r["ex"]), None
-            j = r.json()
-            last = f"{kind}: 행 없음(HTTP {r.status_code}, status={json.dumps(j.get('status'), ensure_ascii=False)[:160]}, data키={list((j.get('data') or {}).keys())[:6]})"
+            last = f"{kind}: 이력 없음"
             errs.append(last)
         except Exception as e:  # noqa: BLE001
             last = f"{kind}: {e}"
@@ -189,7 +188,7 @@ def collect(sym, since, fx, today):
     is_etf = (info.get("type") or "").upper() in ("ETF", "MUTUALFUND")
     ndivs, nerr = fetch_nasdaq_dividends(sym, ["etf", "stocks"] if is_etf or not info.get("type") else ["stocks", "etf"])
     if nerr:
-        notes.append(f"Nasdaq 지급일 없음({nerr}) → 배당락일 기준으로 표시")
+        notes.append("Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정")
     divs = attach_close_fx(merge_dividends(ydivs, ndivs, splits, since), prices, fx, today)
     holdings = None
     if is_etf:
