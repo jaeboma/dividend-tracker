@@ -315,14 +315,14 @@ def part_kr_cost(kr):
     prev_month_end = last_month_end.replace(day=1) - dt.timedelta(days=1)
     days = []
     for end in (last_month_end, prev_month_end):  # 월말 기준, 약 한 달 뒤 공개 → 마지막 영업일 후보 4일씩
-        if end.isoformat() <= have:
-            break
-        d, n = end, 0
-        while n < 4:
+        d, cands = end, []
+        while len(cands) < 4:
             if d.weekday() < 5:
-                days.append(d)
-                n += 1
+                cands.append(d)
             d -= dt.timedelta(days=1)
+        if cands[0].isoformat() <= have:  # 그 달의 마지막 영업일 기준을 이미 갖고 있음
+            break
+        days += [c for c in cands if c.isoformat() > have]
     if not days:
         return f"최신({have})"
     for day in days:
