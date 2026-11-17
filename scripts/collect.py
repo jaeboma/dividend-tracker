@@ -116,13 +116,17 @@ def fetch_nasdaq_dividends(sym, kinds):
             return dt.datetime.strptime(s.strip(), "%m/%d/%Y").date().isoformat()
         except Exception:  # noqa: BLE001  'N/A' 등
             return None
-    last, errs = None, []
+    last, errs, summary = None, [], {}
     for kind in kinds:
         try:
             r = requests.get(f"https://api.nasdaq.com/api/quote/{sym}/dividends?assetclass={kind}",
                              headers={"User-Agent": UA, "Accept": "application/json, text/plain, */*",
                                       "Accept-Language": "en-US,en;q=0.9"}, timeout=25)
-            rows = (((r.json().get("data") or {}).get("dividends") or {}).get("rows")) or []
+            data = r.json().get("data") or {}
+            rows = ((data.get("dividends") or {}).get("rows")) or []
+            ex0, pay0 = mdy(str(data.get("exDividendDate") or "")), mdy(str(data.get("dividendPaymentDate") or ""))
+            if ex0 and not summary:
+                summary.update(ex=ex0, pay=pay0, source="Nasdaq.com")
             out = []
             for x in rows:
                 ex = mdy(x.get("exOrEffDate") or "")
@@ -133,14 +137,47 @@ def fetch_nasdaq_dividends(sym, kinds):
                 if ex and amt > 0:
                     out.append(dict(ex=ex, record=mdy(x.get("recordDate") or ""), pay=mdy(x.get("paymentDate") or ""), amount=amt))
             if out:
-                return sorted(out, key=lambda r: r["ex"]), None
+                return sorted(out, key=lambda r: r["ex"]), None, summary
             last = f"{kind}: 이력 없음"
             errs.append(last)
         except Exception as e:  # noqa: BLE001
             last = f"{kind}: {e}"
             errs.append(last)
         time.sleep(1)
-    return [], " | ".join(errs)
+    return [], " | ".join(errs), summary
+
+
+def fetch_calendar(sym):
+    """Yahoo Finance 일정: 다음(또는 최근) 배당락일과 지급일."""
+    cal = yf.Ticker(sym).calendar or {}
+    def d(v):
+        if isinstance(v, (list, tuple)):
+            v = v[0] if v else None
+        if isinstance(v, dt.datetime):
+            v = v.date()
+        return v.isoformat() if isinstance(v, dt.date) else None
+    ex, pay = d(cal.get("Ex-Dividend Date")), d(cal.get("Dividend Date"))
+    return dict(ex=ex, pay=pay, source="Yahoo Finance") if ex else {}
+
+
+def pick_schedule(cands, divs):
+    """후보 일정에서 (다음 지급 예정, 배당락일→지급일 간격 일수)를 고릅니다."""
+    last_ex = divs[-1]["ex"] if divs else ""
+    lag, nxt = None, None
+    for c in cands:
+        if not c or not c.get("ex"):
+            continue
+        pay = c.get("pay")
+        if pay and pay < c["ex"]:  # 지급일이 배당락일보다 앞이면 서로 다른 회차의 날짜
+            pay = None
+        if pay and lag is None and days_between(pay, c["ex"]) <= 75:
+            lag = days_between(pay, c["ex"])
+        if nxt is None and c["ex"] > last_ex and days_between(c["ex"], last_ex or c["ex"]) <= 400:
+            nxt = dict(ex=c["ex"], pay=pay, source=c["source"])
+    if lag is None:  # Nasdaq 이력에 지급일이 있으면 최근 간격의 중앙값
+        gaps = sorted(days_between(r["pay"], r["ex"]) for r in divs[-12:] if r.get("pay") and r["pay"] >= r["ex"])
+        lag = gaps[len(gaps) // 2] if gaps else None
+    return nxt, lag
 
 
 def fetch_info(sym):
@@ -186,10 +223,16 @@ def collect(sym, since, fx, today):
     except Exception as e:  # noqa: BLE001
         info, _ = dict(name=sym, type="", currency="USD"), notes.append(f"종목 정보 실패: {e}")
     is_etf = (info.get("type") or "").upper() in ("ETF", "MUTUALFUND")
-    ndivs, nerr = fetch_nasdaq_dividends(sym, ["etf", "stocks"] if is_etf or not info.get("type") else ["stocks", "etf"])
+    ndivs, nerr, nsum = fetch_nasdaq_dividends(sym, ["etf", "stocks"] if is_etf or not info.get("type") else ["stocks", "etf"])
     if nerr:
-        notes.append("Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 배당락일 5일 뒤를 지급일로 추정")
+        notes.append("Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정")
     divs = attach_close_fx(merge_dividends(ydivs, ndivs, splits, since), prices, fx, today)
+    try:
+        ycal = fetch_calendar(sym)
+    except Exception as e:  # noqa: BLE001
+        ycal, _ = {}, notes.append(f"Yahoo 일정 실패: {e}")
+    nxt, lag = pick_schedule([nsum, ycal], divs)
+    notes.append(f"일정 후보: Nasdaq={nsum or None}, Yahoo={ycal or None}")
     holdings = None
     if is_etf:
         try:
@@ -197,7 +240,7 @@ def collect(sym, since, fx, today):
         except Exception as e:  # noqa: BLE001
             notes.append(f"보유종목 실패: {e}")
     return dict(symbol=sym, name=info.get("name") or sym, type=(info.get("type") or "").upper(), asOf=prices[-1][0],
-                info=info, splits=splits, dividends=divs, prices=prices, holdings=holdings), notes
+                info=info, splits=splits, next=nxt, payLag=lag, dividends=divs, prices=prices, holdings=holdings), notes
 
 
 def main():
