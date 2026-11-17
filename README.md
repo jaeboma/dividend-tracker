@@ -24,7 +24,8 @@ GitHub 웹이나 앱에서 이 파일을 열고 연필 아이콘으로 수정한
 
 - 매일 한국시간 07:40과 09:40에 `.github/workflows/update.yml`이 실행됩니다. `tickers.json`이나 `scripts/`를 고쳐도 실행됩니다.
 - `scripts/collect.py`: 종목마다 종가·수정주가·배당금·종목 정보·ETF 상위 보유종목(Yahoo Finance), 기준일·지급일(Nasdaq.com), 원/달러 환율(Yahoo Finance KRW=X)을 수집해 `data/t/<티커>.json`에 저장합니다. 한 종목이 실패하면 그 종목만 기존 값을 유지하고, 결과는 `data/index.json`의 `log`에 남습니다.
-- `scripts/sync_jepq.py`: JEPQ 전용 자료(전체 구성종목·ELN, 월별 비중 기록, 분배 일정·공식 수익률, 국내 ETF 비교)를 공개 저장소 [ttokjaetv/jepq-tracker](https://github.com/ttokjaetv/jepq-tracker)에서 받아 검증한 뒤 `data/jepq/`에 저장합니다. 이 부분만 원본 저장소에 의존하며, 원본이 멈추면 JEPQ 전용 섹션만 마지막 값에서 멈춥니다.
+- `scripts/collect_jepq.py`: JEPQ 전용 자료를 출처에서 직접 수집해 `data/jepq/`에 저장합니다. 전체 구성종목·ELN과 공식 수익률·분배 일정은 J.P. Morgan, 국내 유사 ETF 분배금은 FunETF, 실부담비용은 금융투자협회 전자공시에서 받습니다. 월별 비중 기록은 매월 처음 받은 구성종목을 한 줄씩 추가합니다. 부분별 결과는 `data/jepq/log.json`에 남습니다.
+- 2026년 10월 이전의 월별 비중 기록(SEC N-PORT 분기말 포함)과 종목 한글 이름은 [ttokjaetv/jepq-tracker](https://github.com/ttokjaetv/jepq-tracker)가 정리한 자료를 초기값으로 넣어 둔 것이며, 이후로는 그 저장소에 의존하지 않습니다. 비교할 국내 ETF와 한글 이름은 `jepq.json`에서 고칩니다.
 - GitHub은 60일 동안 저장소 활동이 없으면 예약 실행을 중지합니다. 데이터 커밋이 계속 생기는 동안에는 해당되지 않습니다.
 
 ## 화면 기준

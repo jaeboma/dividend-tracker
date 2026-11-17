@@ -247,14 +247,16 @@ function render(T, BENCH, EXT) {
   const nx = SCH.find(r => r.ex > L.ex && r.kind !== 'capgain'), cg = SCH.find(r => r.ex > L.ex && r.kind === 'capgain');
   /* 다음 지급 예정: ① JPMorgan 분배 일정(JEPQ) ② 공시된 다음 배당락일 ③ 작년 같은 회차 일정으로 추정 */
   let NX = null;
-  if (nx) NX = {ex: nx.ex, pay: nx.pay, tag: '금액 미발표', cap: `JPMorgan ${nx.ex.slice(0, 4)}년 분배 일정 기준이며 날짜는 변경될 수 있습니다.${cg ? ` 자본이득 분배 예정일은 ${cg.ex}이며, 자본이득이 없으면 지급되지 않습니다.` : ''}`};
+  const AN = EXT && EXT.meta.announced;
+  if (AN && AN.ex > L.ex) NX = {ex: AN.ex, pay: AN.pay, tag: '금액 발표', amt: AN.amount, cap: 'J.P. Morgan이 발표한 금액과 일정입니다. 배당락 이후 분배 이력에 반영됩니다.'};
+  else if (nx) NX = {ex: nx.ex, pay: nx.pay, tag: '금액 미발표', cap: `JPMorgan ${nx.ex.slice(0, 4)}년 분배 일정 기준이며 날짜는 변경될 수 있습니다.${cg ? ` 자본이득 분배 예정일은 ${cg.ex}이며, 자본이득이 없으면 지급되지 않습니다.` : ''}`};
   else if (T.next && T.next.ex > L.ex) NX = {ex: T.next.ex, pay: T.next.pay, payEst: T.next.pay ? null : addDays(T.next.ex, LAG), tag: '금액 미발표',
     cap: `${esc(T.next.source)} 기준이며 날짜는 변경될 수 있습니다.${T.next.pay ? '' : ' 지급일은 최근 배당락일과 지급일의 간격으로 추정하였습니다.'}`};
   else if (R.length >= N) { const b = R[R.length - N], shift = d => yearsBack(d, -1);
     NX = {ex: shift(b.ex), pay: null, payEst: shift(b.pay || b.date), tag: '일정 추정', est: true, cap: '아직 공시되지 않아 작년 같은 회차의 일정으로 추정한 날짜이며, 실제 일정과 며칠 차이가 날 수 있습니다.'}; }
   if (NX) { const pd = NX.pay || NX.payEst || NX.ex;
     $('nextDiv').innerHTML = `<div class="nh"><b>다음 ${DV}(예정)</b><span>${pd.slice(0, 4)}년 ${+pd.slice(5, 7)}월 지급분</span><span class="tbd">${NX.tag}</span></div>
-       <dl class="kv2"><div><dt>배당락일${NX.est ? '(추정)' : ''}</dt><dd>${NX.ex}</dd></div><div><dt>지급일${NX.pay ? '' : '(추정)'}</dt><dd>${NX.pay || NX.payEst}</dd></div></dl>
+       <dl class="kv2">${NX.amt ? `<div><dt>1주당 ${DV}금</dt><dd>${usd(NX.amt, 5)}</dd></div><div></div>` : ''}<div><dt>배당락일${NX.est ? '(추정)' : ''}</dt><dd>${NX.ex}</dd></div><div><dt>지급일${NX.pay ? '' : '(추정)'}</dt><dd>${NX.pay || NX.payEst}</dd></div></dl>
        <span class="cap">${NX.cap}</span>`; }
   else $('nextDiv').hidden = true;
   $('latestKv').innerHTML = [
@@ -538,7 +540,7 @@ function render(T, BENCH, EXT) {
   $('foot').innerHTML = `
     <p><b>기준</b> · 연도와 ${monthly ? '월' : '회차'}은 지급일 기준이며, 지급일 자료가 없는 건은 최근 배당락일과 지급일의 간격(${LAG}일)을 더해 지급일을 추정하여 배치합니다. ${SYM}은(는) 최근 지급 이력으로 보아 연 ${N}회 지급으로 판단하였습니다. 연간 증감률은 모든 회차가 확정된 해끼리만 계산합니다. 수집 기간은 ${esc(IDX.since || p0[0])} 이후입니다.${EXT ? ' JEPQ의 분배금은 주식 배당과 ELN(콜옵션 매도) 수익에서 나오므로 매달 달라지며, 증감에는 옵션 프리미엄 변화의 영향이 크게 반영됩니다.' : ''}</p>
     <p><b>세금</b> · 미국 상장 종목을 직접 보유하면 ${DV}금에 대해 미국에서 15%가 원천징수되며 국내 추가 원천징수는 없습니다(금융소득이 연 2,000만 원을 넘으면 종합과세 대상에 합산됩니다).${EXT ? ' 국내 상장 해외주식형 ETF의 분배금은 배당소득세 15.4% 과세 대상입니다.' : ''}</p>
-    <p><b>출처</b> · 종가·수정주가·${DV}금·종목 정보·ETF 상위 보유종목: Yahoo Finance · 기준일·지급일: Nasdaq.com · 환율: ${esc(IDX.fxSource || 'Yahoo Finance')}${EXT ? ' · JEPQ 전체 구성종목·ELN·월별 비중·분배 일정·공식 수익률·국내 ETF 비교: 공개 저장소 ttokjaetv/jepq-tracker(똑재TV)가 J.P. Morgan, SEC EDGAR, FunETF, 금융투자협회에서 수집한 자료' : ''}. 화면 구성과 계산 기준은 ttokjaetv/jepq-tracker를 참고하였습니다.${logNote}</p>
+    <p><b>출처</b> · 종가·수정주가·${DV}금·종목 정보·ETF 상위 보유종목: Yahoo Finance · 기준일·지급일: Nasdaq.com · 환율: ${esc(IDX.fxSource || 'Yahoo Finance')}${EXT ? ' · JEPQ 전체 구성종목·ELN·공식 수익률·분배 일정: J.P. Morgan Asset Management · 국내 ETF 분배금: FunETF · 국내 ETF 비용: 금융투자협회 전자공시 · 2026년 10월 이전의 월별 비중 기록(SEC N-PORT 분기말 포함)과 종목 한글 이름: 공개 저장소 ttokjaetv/jepq-tracker(똑재TV)가 정리한 자료를 초기값으로 사용' : ''}. 화면 구성과 계산 기준은 ttokjaetv/jepq-tracker를 참고하였습니다.${logNote}</p>
     <p>이 자료는 특정 종목의 매수·매도를 권유하지 않으며, 과거 ${DV}이 미래 ${DV}을 보장하지 않습니다.</p>`;
 
   /* ----- 엑셀 내려받기 ----- */

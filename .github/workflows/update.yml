@@ -4,7 +4,7 @@ on:
   schedule:
     # 매일 한국시간 07:40 (UTC 22:40): 미국 장 마감 뒤 종가·배당 반영
     - cron: "40 22 * * *"
-    # 매일 한국시간 09:40 (UTC 00:40): JEPQ 전용 자료가 원본 저장소에서 갱신된 뒤 한 번 더
+    # 매일 한국시간 09:40 (UTC 00:40): 늦게 올라오는 자료를 위해 한 번 더
     - cron: "40 0 * * *"
   workflow_dispatch:
   push:
@@ -13,6 +13,7 @@ on:
       - "tickers.json"
       - "scripts/**"
       - "requirements.txt"
+      - "jepq.json"
       - ".github/workflows/update.yml"
 
 permissions:
@@ -39,9 +40,9 @@ jobs:
       - name: 종목별 자료 수집
         run: python scripts/collect.py
 
-      - name: JEPQ 전용 자료 받기
+      - name: JEPQ 전용 자료 수집
         if: always()
-        run: python scripts/sync_jepq.py
+        run: python scripts/collect_jepq.py
 
       - name: 바뀐 데이터 커밋
         if: always()
