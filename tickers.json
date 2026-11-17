@@ -1,5 +1,5 @@
 {
-  "tickers": ["JEPQ", "JEPI", "SCHD", "QQQ", "SPY", "O", "KO"],
+  "tickers": ["JEPQ", "JEPI", "SCHD", "QQQ", "SPY", "O", "QQQI", "GPIQ"],
   "benchmarks": ["SPY", "QQQ", "SCHD"],
   "since": "2006-01-01"
 }
