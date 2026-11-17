@@ -1,9 +1,9 @@
 {
- "checked": "2026-11-17",
+ "checked": "2026-11-18",
  "parts": {
   "holdings": {
    "ok": true,
-   "note": "기준일 2026-11-16 (갱신)"
+   "note": "기준일 2026-11-16"
   },
   "official": {
    "ok": true,
@@ -11,7 +11,7 @@
   },
   "schedule": {
    "ok": true,
-   "note": "보유 연도 ['2026'], 추가 ['2026']"
+   "note": "보유 연도 ['2026']"
   },
   "kr_dist": {
    "ok": true,
