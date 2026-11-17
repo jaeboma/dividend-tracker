@@ -116,7 +116,7 @@ def fetch_nasdaq_dividends(sym, kinds):
             return dt.datetime.strptime(s.strip(), "%m/%d/%Y").date().isoformat()
         except Exception:  # noqa: BLE001  'N/A' 등
             return None
-    last = None
+    last, errs = None, []
     for kind in kinds:
         try:
             r = requests.get(f"https://api.nasdaq.com/api/quote/{sym}/dividends?assetclass={kind}",
@@ -134,10 +134,14 @@ def fetch_nasdaq_dividends(sym, kinds):
                     out.append(dict(ex=ex, record=mdy(x.get("recordDate") or ""), pay=mdy(x.get("paymentDate") or ""), amount=amt))
             if out:
                 return sorted(out, key=lambda r: r["ex"]), None
-            last = f"{kind}: 행 없음(HTTP {r.status_code})"
+            j = r.json()
+            last = f"{kind}: 행 없음(HTTP {r.status_code}, status={json.dumps(j.get('status'), ensure_ascii=False)[:160]}, data키={list((j.get('data') or {}).keys())[:6]})"
+            errs.append(last)
         except Exception as e:  # noqa: BLE001
             last = f"{kind}: {e}"
-    return [], last
+            errs.append(last)
+        time.sleep(1)
+    return [], " | ".join(errs)
 
 
 def fetch_info(sym):
