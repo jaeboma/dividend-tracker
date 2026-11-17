@@ -1,3 +1,353 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>배당 트래커</title></head>
-<body><p>화면을 준비하고 있습니다.</p></body></html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>배당 트래커</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Serif+KR:wght@700&display=swap">
+<style>
+/* 레이아웃: 한 열로 흐르는 계기판. 요약(최신 분배 + 타일) 다음에 차트와 표가 이어진다. */
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --sunken:#f6f8fb;
+  --ink:#101826; --ink2:#465166; --muted:#748095; --line:#e2e7ef;
+  --accent:#2a78d6; --accent-soft:#e6f0fc;
+  --up:#d03b3b; --up-ink:#b42626; --down:#2a78d6; --down-ink:#1c5cab;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s8:#e34948;
+  --r1:#0d366b; --r2:#104281; --r3:#184f95; --r4:#1c5cab; --r5:#256abf; --r6:#2a78d6; --r7:#3987e5; --r8:#5598e7; --r9:#6da7ec; --r10:#86b6ef;
+  --other:#aab3c0; --other2:#d3d9e2; --est:#dbe8f9;
+  --font-display:"Noto Serif KR", "Apple SD Gothic Neo", serif;
+  --font-body:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0e1218; --surface:#171c24; --sunken:#1d232d;
+    --ink:#eef1f5; --ink2:#b8c1ce; --muted:#8792a1; --line:#2a323e;
+    --accent:#3987e5; --accent-soft:#1a2a40;
+    --up:#e66767; --up-ink:#f08f8f; --down:#3987e5; --down-ink:#86b6ef;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0ca30c; --s7:#9085e9; --s8:#e66767;
+    --r1:#cde2fb; --r2:#b7d3f6; --r3:#9ec5f4; --r4:#86b6ef; --r5:#6da7ec; --r6:#5598e7; --r7:#3987e5; --r8:#2a78d6; --r9:#256abf; --r10:#1c5cab;
+    --other:#5d6878; --other2:#3a4350; --est:#1f3350;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1218; --surface:#171c24; --sunken:#1d232d;
+  --ink:#eef1f5; --ink2:#b8c1ce; --muted:#8792a1; --line:#2a323e;
+  --accent:#3987e5; --accent-soft:#1a2a40;
+  --up:#e66767; --up-ink:#f08f8f; --down:#3987e5; --down-ink:#86b6ef;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0ca30c; --s7:#9085e9; --s8:#e66767;
+  --r1:#cde2fb; --r2:#b7d3f6; --r3:#9ec5f4; --r4:#86b6ef; --r5:#6da7ec; --r6:#5598e7; --r7:#3987e5; --r8:#2a78d6; --r9:#256abf; --r10:#1c5cab;
+  --other:#5d6878; --other2:#3a4350; --est:#1f3350;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:16px 16px 56px;display:flex;flex-direction:column;gap:20px}
+.wrap.inner{padding:0;gap:28px;max-width:none;margin:0}
+.picker{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin}
+.picker button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 12px;cursor:pointer;text-align:left;line-height:1.25}
+.picker button b{display:block;font-size:14px}
+.picker button span{display:block;font-size:10.5px;color:var(--muted);max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.picker button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.picker button[aria-pressed="true"] span{color:var(--other2)}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:14px}
+header.top .eyebrow{font-size:12px;color:var(--muted);letter-spacing:.02em}
+h1{font-family:var(--font-display);font-size:clamp(24px,5vw,34px);line-height:1.2;margin:2px 0 0;text-wrap:balance}
+.stamp{font-size:12.5px;color:var(--ink2);display:flex;flex-direction:column;gap:2px;align-items:flex-start}
+.stamp b{color:var(--ink);font-weight:600}
+button{font:inherit;color:inherit}
+.btn{border:1px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px}
+.btn:hover{background:var(--accent-soft)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h2{font-size:18px;margin:0;font-weight:700;text-wrap:balance}
+h3{font-size:14px;margin:0 0 10px;font-weight:600;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.cap{font-size:12px;color:var(--muted);font-weight:400}
+section{display:flex;flex-direction:column;gap:10px}
+.head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.scroll{overflow-x:auto}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:6px 12px;font-size:13px;cursor:pointer;color:var(--ink2)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);font-weight:600}
+.up{color:var(--up-ink)} .down{color:var(--down-ink)} .flat{color:var(--muted)}
+
+/* 요약 */
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:14px}
+@media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr)}}
+.latest{display:flex;flex-direction:column;gap:12px}
+.latest .lbl{font-size:13px;color:var(--ink2);font-weight:500}
+.latest .big{font-size:clamp(38px,9vw,52px);font-weight:700;line-height:1;letter-spacing:-.02em}
+.latest .big span{font-size:13px;font-weight:400;color:var(--muted);margin-left:8px;letter-spacing:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--sunken);font-weight:500}
+.next{border:1px dashed var(--muted);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.next .nh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;font-size:13px}
+.next .tbd{font-size:11px;border-radius:4px;padding:1px 6px;background:var(--accent-soft);color:var(--ink)}
+dl{margin:0}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
+.kv2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px}
+dt{font-size:11.5px;color:var(--muted)}
+dd{margin:0;font-size:14px;font-weight:600;overflow-wrap:anywhere}
+dd small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.offi{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.offi .oh{font-size:11px;letter-spacing:.08em;color:var(--muted);margin:0;font-weight:600}
+.src{font-size:11.5px;color:var(--muted);margin:0}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:420px){.stats{grid-template-columns:minmax(0,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.stat .t{font-size:12px;color:var(--ink2)}
+.stat .v{font-size:22px;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+.stat .s{font-size:11.5px;color:var(--muted)}
+.stat .s span{display:block}
+.mini{margin-top:auto;padding-top:8px;display:flex;flex-direction:column;gap:4px}
+.mini svg{width:100%;height:36px;display:block}
+.mini .axl{display:flex;justify-content:space-between;gap:6px;font-size:10.5px;color:var(--muted)}
+.mini .hint{font-size:11.5px;color:var(--ink2)}
+.hb{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;font-size:11.5px;color:var(--ink2)}
+.hb .tr{height:8px;background:var(--sunken);border-radius:4px;overflow:hidden}
+.hb .tr i{display:block;height:100%;border-radius:0 4px 4px 0}
+.hb b{color:var(--ink);font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tags span{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--down-ink)}
+.tags span b{color:var(--ink2);font-weight:500;margin-right:4px}
+
+/* 차트 */
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;touch-action:pan-y}
+svg text{font-family:var(--font-body);fill:var(--muted);font-size:11px}
+svg .grid{stroke:var(--line);stroke-width:1}
+svg .zero{stroke:var(--muted);stroke-width:1}
+svg .lab{fill:var(--ink);font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+svg .labm{fill:var(--ink2)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--ink2);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend i.ln{height:3px;width:14px;vertical-align:3px;border-radius:2px}
+.legend i.dash{height:0;width:16px;border-top:2px dashed var(--ink2);background:none;vertical-align:3px;border-radius:0}
+.legend i.est{background:var(--est);outline:1px dashed var(--accent);outline-offset:-1px}
+#tip{position:fixed;z-index:10;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12px;line-height:1.5;padding:6px 9px;border-radius:8px;max-width:240px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+#tip i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.prow{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:13px;margin-bottom:10px}
+input[type=date],input[type=search],select{font:inherit;font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 8px;max-width:100%}
+.pstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 12px;margin-bottom:10px}
+@media (max-width:640px){.pstats{grid-template-columns:repeat(2,minmax(0,1fr))}.kv{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11.5px;color:var(--muted);font-weight:500;white-space:nowrap}
+th small{display:block;font-weight:400}
+td.num,th.num{text-align:right;white-space:nowrap}
+td .d{display:block;font-size:11px;font-weight:400}
+td small{display:block;font-size:11px;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.mtable th,.mtable td{text-align:right;white-space:nowrap}
+.mtable td.yr,.mtable th:first-child{text-align:left;font-weight:600;position:sticky;left:0;background:var(--surface)}
+.mtable tr.partial td,.mtable tr.partial td.yr{background:var(--sunken)}
+.mtable td.na{color:var(--line)}
+tr.mine td{font-weight:600;background:var(--accent-soft)}
+tr.ref td{background:var(--sunken)}
+tr.sum td{font-weight:600}
+tr.fold td{color:var(--ink2)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px}
+.nm{display:block}
+#krtable{min-width:680px}
+#krtable td:first-child{min-width:170px}
+.tk{font-size:11px;color:var(--muted);margin-left:6px}
+.toggle{width:100%;margin-top:10px;border:1px solid var(--line);background:var(--sunken);border-radius:8px;padding:8px;font-size:13px;cursor:pointer;color:var(--ink2)}
+.toggle:hover{border-color:var(--accent);color:var(--accent)}
+
+/* 구성종목 */
+.hold{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:14px;align-items:start}
+@media (max-width:860px){.hold{grid-template-columns:minmax(0,1fr)}}
+.hcol{display:flex;flex-direction:column;gap:14px}
+.donut svg{max-width:280px;margin:0 auto;display:block;width:100%}
+.srow{display:grid;grid-template-columns:minmax(84px,auto) minmax(0,1fr) 54px 62px;gap:8px;align-items:center;font-size:12.5px;padding:3px 0}
+.srow .trk{height:8px;background:var(--sunken);border-radius:4px;overflow:hidden}
+.srow .trk i{display:block;height:100%;background:var(--s1);border-radius:0 4px 4px 0}
+.srow .pv{text-align:right;font-weight:600}
+.srow .sc{font-size:11px;text-align:right;color:var(--muted)}
+.bar{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:10px}
+.moves{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:12.5px}
+.moves .t{border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:12px}
+.moves .t.in{border-color:var(--up)} .moves .t.out{border-color:var(--down)}
+.note{font-size:13px;color:var(--ink2);margin:0;max-width:72ch}
+.trend svg{cursor:pointer}
+.box{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:13px}
+.box p{margin:0 0 8px} .box p:last-child{margin:0}
+.box .bh{font-weight:700;font-size:14px}
+.box ul,.box ol{margin:0 0 8px;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.box .numv{font-weight:700;margin-left:6px}
+.box .sub{display:block;color:var(--ink2);font-size:12px}
+footer{border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--ink2);display:flex;flex-direction:column;gap:10px}
+footer p{margin:0;max-width:80ch}
+.err{padding:12px;border:1px solid var(--up);color:var(--up-ink);border-radius:8px;background:var(--surface)}
+@media (prefers-reduced-motion:no-preference){.seg button,.btn,.toggle{transition:background .15s,color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="picker" id="picker" aria-label="종목 선택"></nav>
+<div class="wrap inner" id="app">
+  <header class="top">
+    <div>
+      <div class="eyebrow" id="eyebrow"></div>
+      <h1 id="title">배당 트래커</h1>
+    </div>
+    <div class="stamp">
+      <span>반영 범위 <b id="rangeTxt">-</b></span>
+      <span>데이터 갱신 <b id="updTxt">-</b></span>
+      <button type="button" class="btn" id="xlsxBtn">엑셀로 내려받기</button>
+      <span class="cap" id="xlsxMsg" role="status"></span>
+    </div>
+  </header>
+
+  <section class="hero" aria-label="최신 분배 요약">
+    <div class="panel latest">
+      <div class="lbl" id="latestLbl"></div>
+      <div class="big" id="latestAmt"></div>
+      <div class="chips" id="latestChips"></div>
+      <div class="next" id="nextDiv"></div>
+      <dl class="kv" id="latestKv"></dl>
+      <div class="offi" id="offi" hidden></div>
+      <p class="src" id="latestSrc"></p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section>
+    <div class="head"><h2>주가 흐름</h2>
+      <div class="seg" role="group" aria-label="주가 기간" id="prange">
+        <button type="button" data-y="1" aria-pressed="false">1년</button><button type="button" data-y="3" aria-pressed="false">3년</button><button type="button" data-y="0" aria-pressed="true">상장 이후</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="prow"><label for="pFrom">시작일</label><input type="date" id="pFrom"><span>~</span><label for="pTo">종료일</label><input type="date" id="pTo"></div>
+      <dl class="pstats" id="pstats"></dl>
+      <div class="chart" id="pchart"></div>
+      <div class="legend"><span><i class="ln" style="background:var(--ink)"></i>주가(종가)</span><span><i class="ln" style="background:var(--s3)"></i>분배금을 재투자한 경우(같은 출발 가격 기준)</span></div>
+    </div>
+    <span class="cap" id="pcap"></span>
+  </section>
+
+  <section id="trSec">
+    <div class="head"><h2 id="trTitle">배당 재투자 총수익 비교</h2>
+      <div class="seg" role="group" aria-label="비교 기간" id="trange">
+        <button type="button" data-y="1" aria-pressed="false">1년</button><button type="button" data-y="3" aria-pressed="false">3년</button><button type="button" data-y="0" aria-pressed="true">전체</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="chart" id="trchart"></div>
+      <div class="legend" id="trlegend"></div>
+      <div class="scroll" style="margin-top:12px"><table id="trtable"></table></div>
+    </div>
+    <span class="cap" id="trcap"></span>
+  </section>
+
+  <section>
+    <div class="head"><h2><span class="dv">분배</span> 연간 합계 (1주 기준, USD)</h2><span class="cap" id="annualCap"></span></div>
+    <div class="panel"><div class="chart" id="annual"></div>
+      <div class="legend"><span><i style="background:var(--s1)"></i>확정</span><span><i style="background:var(--other)"></i>첫해(일부 기간)</span><span><i class="est"></i>예상(남은 회차를 올해 확정분 평균으로 채움)</span><span><i class="dash"></i><span id="annualAvg">확정 연도 평균</span></span></div>
+    </div>
+  </section>
+
+  <section id="growthSec">
+    <div class="head"><h2>연간 <span class="dv">분배</span> 증감률</h2><span class="cap">전년 대비, 모든 회차가 확정된 해끼리만 비교합니다</span></div>
+    <div class="panel"><div class="chart" id="growth"></div>
+      <div class="legend"><span><i style="background:var(--up)"></i>증가</span><span><i style="background:var(--down)"></i>감소</span><span><i class="est"></i>예상</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head"><h2>회차별 <span class="dv">분배</span> 추이 (USD)</h2><span class="cap" id="mchartCap"></span></div>
+    <div class="panel"><div class="chart" id="mchart"></div>
+      <div class="legend"><span><i style="background:var(--s1)"></i>확정</span><span><i class="est"></i>예상</span><span><i class="dash"></i><span id="monthlyAvg">확정분 전체 평균</span></span></div>
+    </div>
+    <div class="box" id="estNote" hidden></div>
+  </section>
+
+  <section>
+    <div class="head"><h2>회차별 <span class="dv">분배</span> 표</h2>
+      <div class="seg" role="group" aria-label="표시 단위" id="unitSeg">
+        <button type="button" data-u="usd" aria-pressed="true">USD</button><button type="button" data-u="krw" aria-pressed="false">원화 세전</button><button type="button" data-u="net" aria-pressed="false">원화 세후</button>
+      </div>
+    </div>
+    <div class="panel scroll"><table id="mtable" class="mtable"></table></div>
+    <span class="cap" id="mcap"></span>
+  </section>
+
+  <section id="fundSec" hidden>
+    <div class="head"><h2>구성종목 TOP 10</h2><span class="cap" id="fundAsOf"></span></div>
+    <div class="hold">
+      <div class="hcol">
+        <div class="panel donut" id="fundDonut"></div>
+        <div class="panel" id="fundSecPanel"><h3>섹터 비중<span class="cap">주식 부분 기준</span></h3><div id="fundSectors"></div></div>
+      </div>
+      <div class="panel">
+        <h3>TOP 10<span class="cap">Yahoo Finance 제공 상위 보유종목</span></h3>
+        <div class="scroll"><table id="fundTable"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="holdSec" hidden>
+    <div class="head"><h2>구성종목 TOP 10 · ELN</h2><span class="cap" id="holdAsOf"></span></div>
+    <div class="hold">
+      <div class="hcol">
+        <div class="panel donut" id="donut"></div>
+        <div class="panel"><h3>섹터 비중<span class="cap">ELN·현금을 포함한 전체 기준</span></h3><div id="sectors"></div></div>
+      </div>
+      <div class="panel">
+        <h3><span id="holdTitle">TOP 10</span><span class="cap" id="holdTopCap"></span></h3>
+        <div class="bar" id="holdSearch" hidden><label for="hq" class="cap">검색</label><input id="hq" type="search" placeholder="종목명·티커·섹터 (예: 애플, NVDA, ELN)"><span class="cap" id="hcnt"></span></div>
+        <div class="scroll"><table id="holdTable"></table></div>
+        <button type="button" class="toggle" id="holdToggle" aria-expanded="false"></button>
+      </div>
+    </div>
+    <span class="cap">ELN(주가연계채권)은 JEPQ가 나스닥100 콜옵션 매도 수익을 받기 위해 편입하는 채권이며, 분배금의 상당 부분이 여기에서 나옵니다. 비중은 종목 시장가치를 전체 시장가치로 나눈 값이고 합계는 100%입니다.</span>
+  </section>
+
+  <section id="hmSec" hidden>
+    <div class="head"><h2>월별 비중 기록</h2><span class="cap" id="hmCap"></span></div>
+    <div class="bar"><label for="hmSel" class="cap">기준 월</label><select id="hmSel"></select><span class="cap" id="hmBasis"></span></div>
+    <p class="note" id="hmNote"></p>
+    <div class="hold">
+      <div class="hcol">
+        <div class="panel donut" id="hmDonut"></div>
+        <div class="panel"><h3>섹터 비중<span class="cap" id="hmVs"></span></h3><div id="hmSectors"></div></div>
+      </div>
+      <div class="panel">
+        <h3>TOP 10<span class="cap" id="hmTopCap"></span></h3>
+        <div class="scroll"><table id="hmTop"></table></div>
+        <div id="hmMoves"></div>
+      </div>
+    </div>
+    <div class="panel trend">
+      <h3>섹터·ELN 비중 추이<span class="cap">분기말은 SEC N-PORT, 최근 월은 JPMorgan 공식 자료입니다. 빈 칸은 공개 자료가 없는 달이며, 막대를 누르면 해당 월로 이동합니다.</span></h3>
+      <div class="chart" id="hmTrend"></div>
+      <div class="legend" id="hmLegend"></div>
+    </div>
+  </section>
+
+  <section id="krSec" hidden>
+    <div class="head"><h2>국내 JEPQ형(나스닥100 커버드콜) ETF 비교</h2><span class="cap" id="krAsOf"></span></div>
+    <div class="panel scroll"><table id="krtable"></table></div>
+    <span class="cap" id="krCostCap"></span>
+    <div class="panel"><div class="scroll"><table id="krm" class="mtable"></table></div><button type="button" class="toggle" id="krmToggle" aria-expanded="false"></button></div>
+    <span class="cap">12개월 분배율은 12개월 분배금 합계를 기준 가격으로 나눈 값이며, 회차별 분배율을 더한 값이 아닙니다. 기준 가격은 국내 ETF의 경우 최근 분배금을 해당 회차 분배율로 나누어 역산한 1좌 가격이고, JEPQ는 최근 배당락일 종가입니다. JEPQ 행은 기준일 이전 마지막 배당락까지의 12회를 사용하므로 상단 요약의 TTM과 차이가 날 수 있습니다.</span>
+    <span class="cap">월 합계는 국내 ETF는 분배 기준일(매월 말)이 속한 달, JEPQ는 지급일이 속한 달로 묶었습니다. 국내 ETF의 월말 기준 분배금은 다음 달 초에 입금되므로 같은 줄의 JEPQ 분배와 입금 시기가 비슷합니다. 작은 숫자는 전년 같은 달 대비 증감입니다.</span>
+    <div class="box" id="krNote"></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+</div>
+<div id="tip" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
