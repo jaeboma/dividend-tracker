@@ -69,29 +69,28 @@
  "jepq_fee": 0.0035,
  "official": {
   "sec_yield": {
-   "value": 0.1204,
-   "asOf": "2026-11-12"
+   "value": 0.1228,
+   "asOf": "2026-11-13"
   },
   "rolling_12m": {
    "value": 0.1187,
-   "asOf": "2026-11-13"
+   "asOf": "2026-11-16"
   },
   "dist_yield": {
-   "value": 0.1167,
-   "asOf": "2026-11-13"
+   "value": 0.1196,
+   "asOf": "2026-11-16"
   },
   "nav": {
-   "value": 56.2109,
-   "asOf": "2026-11-13"
+   "value": 54.8411,
+   "asOf": "2026-11-16"
   },
   "aum": {
-   "value": 42093562537,
-   "asOf": "2026-11-13"
+   "value": 41086977630,
+   "asOf": "2026-11-16"
   },
-  "expense": 0.0035,
   "source": "J.P. Morgan Asset Management JEPQ 상품 데이터",
   "url": "https://am.jpmorgan.com/us/en/asset-management/adv/products/jpmorgan-nasdaq-equity-premium-income-etf-etf-shares-46654q203",
-  "checked": "2026-11-14"
+  "checked": "2026-11-17"
  },
  "schedule": {
   "rows": [
@@ -173,5 +172,12 @@
   },
   "source": "J.P. Morgan Exchange-Traded Fund Trust Dividend Calendar (PDF)",
   "checked": "2026-11-01"
+ },
+ "announced": {
+  "ex": "2026-11-02",
+  "record": "2026-11-02",
+  "pay": "2026-11-04",
+  "amount": 0.53922,
+  "source": "J.P. Morgan 공식"
  }
 }
