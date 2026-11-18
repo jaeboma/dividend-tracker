@@ -6,50 +6,50 @@
  "tickers": [
   {
    "symbol": "JEPQ",
-   "name": "JEPQ",
-   "type": "",
+   "name": "JPMorgan Nasdaq Equity Premium Income ETF",
+   "type": "ETF",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "JEPI",
-   "name": "JEPI",
-   "type": "",
+   "name": "JPMorgan Equity Premium Income ETF",
+   "type": "ETF",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "SCHD",
-   "name": "SCHD",
-   "type": "",
+   "name": "Schwab U.S. Dividend Equity ETF",
+   "type": "ETF",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "QQQ",
-   "name": "QQQ",
-   "type": "",
+   "name": "Invesco QQQ Trust",
+   "type": "ETF",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "SPY",
-   "name": "SPY",
-   "type": "",
+   "name": "State Street SPDR S&P 500 ETF Trust",
+   "type": "ETF",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "O",
-   "name": "O",
-   "type": "",
+   "name": "Realty Income Corporation",
+   "type": "EQUITY",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "QQQI",
-   "name": "QQQI",
-   "type": "",
+   "name": "NEOS NASDAQ-100(R) High Income ETF",
+   "type": "ETF",
    "asOf": "2026-11-17"
   },
   {
    "symbol": "GPIQ",
-   "name": "GPIQ",
-   "type": "",
+   "name": "Goldman Sachs Nasdaq-100 Premiu",
+   "type": "ETF",
    "asOf": "2026-11-17"
   }
  ],
