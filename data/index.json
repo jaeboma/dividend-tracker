@@ -8,13 +8,13 @@
    "symbol": "JEPQ",
    "name": "JPMorgan Nasdaq Equity Premium Income ETF",
    "type": "ETF",
-   "asOf": "2026-11-18"
+   "asOf": "2026-11-19"
   },
   {
    "symbol": "JEPI",
    "name": "JPMorgan Equity Premium Income ETF",
    "type": "ETF",
-   "asOf": "2026-11-18"
+   "asOf": "2026-11-19"
   },
   {
    "symbol": "SCHD",
@@ -44,13 +44,13 @@
    "symbol": "QQQI",
    "name": "NEOS NASDAQ-100(R) High Income ETF",
    "type": "ETF",
-   "asOf": "2026-11-18"
+   "asOf": "2026-11-19"
   },
   {
    "symbol": "GPIQ",
    "name": "Goldman Sachs Nasdaq-100 Premiu",
    "type": "ETF",
-   "asOf": "2026-11-18"
+   "asOf": "2026-11-19"
   }
  ],
  "extra": [],
@@ -62,16 +62,16 @@
  "log": {
   "JEPQ": {
    "ok": true,
-   "rows": 1141,
+   "rows": 1142,
    "dividends": 54,
-   "asOf": "2026-11-18",
+   "asOf": "2026-11-19",
    "notes": []
   },
   "JEPI": {
    "ok": true,
-   "rows": 1633,
+   "rows": 1634,
    "dividends": 77,
-   "asOf": "2026-11-18",
+   "asOf": "2026-11-19",
    "notes": [
     "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정"
    ]
@@ -112,16 +112,16 @@
   },
   "QQQI": {
    "ok": true,
-   "rows": 705,
+   "rows": 706,
    "dividends": 34,
-   "asOf": "2026-11-18",
+   "asOf": "2026-11-19",
    "notes": []
   },
   "GPIQ": {
    "ok": true,
-   "rows": 768,
+   "rows": 769,
    "dividends": 36,
-   "asOf": "2026-11-18",
+   "asOf": "2026-11-19",
    "notes": []
   }
  }
