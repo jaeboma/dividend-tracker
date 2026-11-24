@@ -1,21 +1,21 @@
 {
- "checked": "2026-11-23",
+ "checked": "2026-11-24",
  "parts": {
   "holdings": {
    "ok": true,
-   "note": "기준일 2026-11-20"
+   "note": "기준일 2026-11-23 (갱신)"
   },
   "official": {
    "ok": true,
-   "note": "SEC 수익률 기준일 2026-11-19, 발표 분배 2026-11-02 $0.53922"
+   "note": "SEC 수익률 기준일 2026-11-20, 발표 분배 2026-11-02 $0.53922"
   },
   "schedule": {
    "ok": true,
    "note": "보유 연도 ['2026']"
   },
   "kr_dist": {
-   "ok": true,
-   "note": "486290 28건(+0), 494300 24건(+0), 441680 49건(+0)"
+   "ok": false,
+   "error": "RuntimeError: 요청 실패(HTTP 403)"
   },
   "kr_cost": {
    "ok": true,
