@@ -1,6 +1,6 @@
 {
- "updated": "2026-11-25",
- "checked": "2026-11-25",
+ "updated": "2026-11-26",
+ "checked": "2026-11-26",
  "since": "2006-01-01",
  "fxSource": "Yahoo Finance KRW=X 종가",
  "tickers": [
@@ -8,49 +8,49 @@
    "symbol": "JEPQ",
    "name": "JPMorgan Nasdaq Equity Premium Income ETF",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "JEPI",
    "name": "JPMorgan Equity Premium Income ETF",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "SCHD",
    "name": "Schwab U.S. Dividend Equity ETF",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "QQQ",
    "name": "Invesco QQQ Trust",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "SPY",
    "name": "State Street SPDR S&P 500 ETF Trust",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "O",
    "name": "Realty Income Corporation",
    "type": "EQUITY",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "QQQI",
    "name": "NEOS NASDAQ-100(R) High Income ETF",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   },
   {
    "symbol": "GPIQ",
    "name": "Goldman Sachs Nasdaq-100 Premiu",
    "type": "ETF",
-   "asOf": "2026-11-24"
+   "asOf": "2026-11-25"
   }
  ],
  "extra": [],
@@ -62,66 +62,66 @@
  "log": {
   "JEPQ": {
    "ok": true,
-   "rows": 1145,
+   "rows": 1146,
    "dividends": 54,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": []
   },
   "JEPI": {
    "ok": true,
-   "rows": 1637,
+   "rows": 1638,
    "dividends": 77,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": [
     "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정"
    ]
   },
   "SCHD": {
    "ok": true,
-   "rows": 3796,
+   "rows": 3797,
    "dividends": 60,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": [
     "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정"
    ]
   },
   "QQQ": {
    "ok": true,
-   "rows": 5257,
+   "rows": 5258,
    "dividends": 86,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": []
   },
   "SPY": {
    "ok": true,
-   "rows": 5257,
+   "rows": 5258,
    "dividends": 83,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": [
     "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정"
    ]
   },
   "O": {
    "ok": true,
-   "rows": 5257,
+   "rows": 5258,
    "dividends": 250,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": [
     "Nasdaq.com에 지급일 이력이 없어(나스닥 상장 종목만 제공) 최근 배당락일→지급일 간격으로 지급일을 추정"
    ]
   },
   "QQQI": {
    "ok": true,
-   "rows": 709,
+   "rows": 710,
    "dividends": 34,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": []
   },
   "GPIQ": {
    "ok": true,
-   "rows": 772,
+   "rows": 773,
    "dividends": 36,
-   "asOf": "2026-11-24",
+   "asOf": "2026-11-25",
    "notes": []
   }
  }
